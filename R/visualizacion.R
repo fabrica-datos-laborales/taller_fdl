@@ -1,4 +1,6 @@
 
+# Taller de visualización de datos laborales ------------------------------
+
 # Cargar paquetes ---------------------------------------------------------
 
 
