@@ -49,8 +49,8 @@ barra
 barra + theme_minimal()
 barra
 
-save_plot("output/fig/barras.jpg", fig = last_plot())
-#save_plot("output/fig/imagen.jpg", fig = barra)
+save_plot("output/fig/barras.jpg", fig = barra)
+#save_plot("output/fig/imagen.jpg", fig = last_plot())
 
 ## Histograma --------------------------------------------------------------
 histo <- data %>% 
@@ -64,7 +64,7 @@ histo <- data %>%
   theme_minimal()
 histo
 
-
+save_plot("output/fig/histo.jpg", fig = histo)
 
 # Bivariado ---------------------------------------------------------------
 
@@ -78,19 +78,21 @@ bi_puntos <- data %>%
              color = str_wrap(Govint_ictwss,
                                       width = 30))) + 
   geom_point() +
-  labs(title="Relationship between Women Political Empowerment  
-and Minimum relative to median wages of full-time 
-workers",
-       x ="Women Political Empowerment Index", y = "Minimum relative to median 
+  labs(title="Relationship between Government intervention 
+in wage setting and Minimum relative to median 
+wages of full-time workers",
+       x ="", y = "Minimum relative to median 
 wages of full-time workers",
        caption = "Elaboración propia en base a V-Dem y OECD",
        color = "Government intervention in 
 wage setting") +
   theme(axis.text.x = element_blank(),
         panel.background = element_rect("white"),
-        panel.grid = element_line("grey80")) 
+        panel.grid = element_line("grey80"),
+        plot.caption = element_text(hjust = -2)) 
 bi_puntos
 
+save_plot("output/fig/bi_puntos.jpg", fig = bi_puntos)
 
 ## Dispersión --------------------------------------------------------------
 scatter <- data %>% 
@@ -99,13 +101,19 @@ scatter <- data %>%
   ggplot(aes(x = women_empower_vdem_vdem, y = mrw_oecd)) + 
   geom_point(color = "red") + 
   geom_smooth(method = "lm", colour = "black") + 
-  labs(title="Relationship between Women Political Empowerment  
-and Minimum relative to median wages of full-time 
-workers",
+  labs(title="Relationship between 
+Women Political Empowerment and 
+Minimum relative to median wages 
+of full-time workers",
        x ="Women Political Empowerment Index", y = "Minimum relative to median 
 wages of full-time workers",
        caption = "Elaboración propia en base a V-Dem y OECD") +
   theme_minimal() 
 scatter
+
+save_plot("output/fig/scatter.jpg", fig = scatter)
+
+# Longitudinal ------------------------------------------------------------
+
 
 
