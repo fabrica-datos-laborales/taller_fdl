@@ -15,6 +15,8 @@ data <- readRDS("output/proc.rds")
 # Graficar ----------------------------------------------------------------
 
 
+# Univariado --------------------------------------------------------------
+
 ## Gráfico de barras -------------------------------------------------------
 ### Básico
 barra <- data %>% 
@@ -39,7 +41,8 @@ barra
 barra <- barra + 
   labs(title="Government intervention in 
 wage bargaining",
-     x ="", y = "Total")
+     x ="", y = "Total",
+     caption = "Elaboración propia en base a ICTWSS")
 barra
 
 ### Tema 
@@ -49,6 +52,60 @@ barra
 save_plot("output/fig/barras.jpg", fig = last_plot())
 #save_plot("output/fig/imagen.jpg", fig = barra)
 
-# Histograma --------------------------------------------------------------
+## Histograma --------------------------------------------------------------
+histo <- data %>% 
+  group_by(iso3c, year) %>% 
+  filter(!is.na(db_wdi)) %>% 
+  ggplot(aes(x = db_wdi)) + 
+  geom_histogram(color = "black", fill = "red") + 
+  labs(title="Ease of Doing Business Index",
+       x ="", y = "Total",
+       caption = "Elaboración propia en base a WDI") +
+  theme_minimal()
+histo
+
+
+
+# Bivariado ---------------------------------------------------------------
+
+## Puntos bivariado --------------------------------------------------------
+bi_puntos <- data %>% 
+  group_by(Govint_ictwss) %>% 
+  summarise(mrw = mean(mrw_oecd, na.rm = T)) %>% 
+  filter(!is.na(Govint_ictwss)) %>% 
+  ggplot(aes(x = Govint_ictwss,
+             y = mrw, 
+             color = str_wrap(Govint_ictwss,
+                                      width = 30))) + 
+  geom_point() +
+  labs(title="Relationship between Women Political Empowerment  
+and Minimum relative to median wages of full-time 
+workers",
+       x ="Women Political Empowerment Index", y = "Minimum relative to median 
+wages of full-time workers",
+       caption = "Elaboración propia en base a V-Dem y OECD",
+       color = "Government intervention in 
+wage setting") +
+  theme(axis.text.x = element_blank(),
+        panel.background = element_rect("white"),
+        panel.grid = element_line("grey80")) 
+bi_puntos
+
+
+## Dispersión --------------------------------------------------------------
+scatter <- data %>% 
+  group_by(iso3c, year) %>% 
+  filter(!is.na(women_empower_vdem_vdem) & !is.na(mrw_oecd)) %>% 
+  ggplot(aes(x = women_empower_vdem_vdem, y = mrw_oecd)) + 
+  geom_point(color = "red") + 
+  geom_smooth(method = "lm", colour = "black") + 
+  labs(title="Relationship between Women Political Empowerment  
+and Minimum relative to median wages of full-time 
+workers",
+       x ="Women Political Empowerment Index", y = "Minimum relative to median 
+wages of full-time workers",
+       caption = "Elaboración propia en base a V-Dem y OECD") +
+  theme_minimal() 
+scatter
 
 
