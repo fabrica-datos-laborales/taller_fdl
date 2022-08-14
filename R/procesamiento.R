@@ -1,11 +1,12 @@
 
 # Procesamiento de datos --------------------------------------------------
 
-
+rm(list=ls())
 # Cargar paquetes ---------------------------------------------------------
 #install.packages("pacman")
 pacman::p_load(tidyverse,
-               sjmisc)
+               sjmisc,
+               car)
 
 # Cargar datos ------------------------------------------------------------
 fdl <- readRDS(url("https://github.com/fabrica-datos-laborales/fdl-data/raw/main/output/data/fdl.rds"))
@@ -34,6 +35,9 @@ proc <- fdl %>%
 # Preparar datos ----------------------------------------------------------  
   mutate(Govint_ictwss = as_factor(Govint_ictwss))
 
+
+proc$Govint_ictwss <- car::recode(proc$Govint_ictwss,
+                                  "6 = NA")
 
 # Exportar ----------------------------------------------------------------
 saveRDS(proc, "output/proc.rds")
