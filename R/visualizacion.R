@@ -97,17 +97,16 @@ save_plot("output/fig/bi_puntos.jpg", fig = bi_puntos)
 ## Dispersión --------------------------------------------------------------
 scatter <- data %>% 
   group_by(iso3c, year) %>% 
-  filter(!is.na(women_empower_vdem_vdem) & !is.na(mrw_oecd)) %>% 
-  ggplot(aes(x = women_empower_vdem_vdem, y = mrw_oecd)) + 
+  filter(!is.na(`ud_ilo-stat`) & !is.na(mrw_oecd)) %>% 
+  ggplot(aes(x = `ud_ilo-stat`, y = mrw_oecd)) + 
   geom_point(color = "red") + 
   geom_smooth(method = "lm", colour = "black") + 
-  labs(title="Relationship between 
-Women Political Empowerment and 
-Minimum relative to median wages 
-of full-time workers",
-       x ="Women Political Empowerment Index", y = "Minimum relative to median 
+  labs(title="Relationship between Trade union density and 
+Minimum relative to median wages of full-time 
+workers",
+       x ="Trade union density", y = "Minimum relative to median 
 wages of full-time workers",
-       caption = "Elaboración propia en base a V-Dem y OECD") +
+       caption = "Elaboración propia en base a ILO-Stat y OECD") +
   theme_minimal() 
 scatter
 
@@ -116,4 +115,42 @@ save_plot("output/fig/scatter.jpg", fig = scatter)
 # Longitudinal ------------------------------------------------------------
 
 
+## Univariado --------------------------------------------------------------
+
+long_u <- data %>% 
+  filter(year >= 1990 & !is.na(women_empower_vdem_vdem)) %>% 
+  group_by(year) %>% 
+  summarise(wei = mean(women_empower_vdem_vdem, na.rm = T)) %>% 
+  ggplot(aes(x = year, y = wei)) + 
+  geom_line(color = "purple") +
+  labs(title="Evolution of Women Political Empowerment Index 
+(1990-2020)",
+       x ="Year", y = "Women Political Empowerment Index",
+       caption = "Elaboración propia en base a V-Dem") +
+  theme_minimal() 
+long_u
+save_plot("output/fig/long_u.jpg", fig = long_u)
+
+
+## Bivariado ---------------------------------------------------------------
+
+long_b <- data %>% 
+  filter(year >= 1990 & 
+           !is.na(women_empower_vdem_vdem) & 
+           !is.na(`hourearn_fem_isco08_total_ilo-stat`)) %>% 
+  group_by(year) %>% 
+  summarise(cor = cor(women_empower_vdem_vdem, 
+                      `hourearn_fem_isco08_total_ilo-stat`,
+                      use = "pairwise.complete.obs",
+                      method = "pearson")) %>% 
+  ggplot(aes(x = year, y = cor)) + 
+  geom_line(color = "purple") +
+  labs(title="Evolution of the relationship
+between Women Political Empowerment Index and
+Female hourly salary (1990-2020)",
+       x ="Year", y = "",
+       caption = "Elaboración propia en base a V-Dem e ILO-Stat") +
+  theme_minimal() 
+long_b
+save_plot("output/fig/long_b.jpg", fig = long_b)
 
