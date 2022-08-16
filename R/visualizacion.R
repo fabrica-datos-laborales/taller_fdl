@@ -6,7 +6,8 @@ rm(list = ls())
 #install.packages("pacman")
 pacman::p_load(tidyverse,
                sjPlot,
-               stringr)
+               stringr,
+               car)
 
 # Cargar datos ------------------------------------------------------------
 data <- readRDS("output/proc.rds")
@@ -39,8 +40,8 @@ barra
 
 ### Títulos
 barra <- barra + 
-  labs(title="Government intervention in 
-wage bargaining",
+  labs(title="Intervención gubernamental en negociaciones 
+salariales",
      x ="", y = "Total",
      caption = "Elaboración propia en base a ICTWSS")
 barra
@@ -78,14 +79,14 @@ bi_puntos <- data %>%
              color = str_wrap(Govint_ictwss,
                                       width = 30))) + 
   geom_point() +
-  labs(title="Relationship between Government intervention 
-in wage setting and Minimum relative to median 
-wages of full-time workers",
-       x ="", y = "Minimum relative to median 
-wages of full-time workers",
+  labs(title="Relación entre intervención gubernamental en negociaciones 
+salariales y salarios mínimos en razon de salarios medianos 
+para trabajadores a tiempo completo",
+       x ="", y = "Salarios mínimos en razon de salarios medianos 
+para trabajadores a tiempo completo",
        caption = "Elaboración propia en base a V-Dem y OECD",
-       color = "Government intervention in 
-wage setting") +
+       color = "Intervención gubernamental en negociaciones 
+salariales") +
   theme(axis.text.x = element_blank(),
         panel.background = element_rect("white"),
         panel.grid = element_line("grey80"),
@@ -97,15 +98,15 @@ save_plot("output/fig/bi_puntos.jpg", fig = bi_puntos)
 ## Dispersión --------------------------------------------------------------
 scatter <- data %>% 
   group_by(iso3c, year) %>% 
-  filter(!is.na(`ud_ilo-stat`) & !is.na(mrw_oecd)) %>% 
-  ggplot(aes(x = `ud_ilo-stat`, y = mrw_oecd)) + 
+  filter(!is.na(ud_ilo_stat) & !is.na(mrw_oecd)) %>% 
+  ggplot(aes(x = ud_ilo_stat, y = mrw_oecd)) + 
   geom_point(color = "red") + 
   geom_smooth(method = "lm", colour = "black") + 
-  labs(title="Relationship between Trade union density and 
-Minimum relative to median wages of full-time 
-workers",
-       x ="Trade union density", y = "Minimum relative to median 
-wages of full-time workers",
+  labs(title="Relación entre densidad sindical y salarios 
+mínimos en razon de salarios medianos 
+para trabajadores a tiempo completo",
+       x ="Densidad sindical", y = "Salarios mínimos en razon de salarios medianos 
+para trabajadores a tiempo completo",
        caption = "Elaboración propia en base a ILO-Stat y OECD") +
   theme_minimal() 
 scatter
@@ -118,14 +119,15 @@ save_plot("output/fig/scatter.jpg", fig = scatter)
 ## Univariado --------------------------------------------------------------
 
 long_u <- data %>% 
-  filter(year >= 1990 & !is.na(women_empower_vdem_vdem)) %>% 
+  filter(year >= 1990 & !is.na(women_empower_vdem)) %>% 
   group_by(year) %>% 
-  summarise(wei = mean(women_empower_vdem_vdem, na.rm = T)) %>% 
+  summarise(wei = mean(women_empower_vdem, na.rm = T)) %>% 
   ggplot(aes(x = year, y = wei)) + 
   geom_line(color = "purple") +
-  labs(title="Evolution of Women Political Empowerment Index 
-(1990-2020)",
-       x ="Year", y = "Women Political Empowerment Index",
+  labs(title="Transformaciones en el Índice de 
+Empoderamiento Político Femenino (1990-2020)",
+       x ="Año", y = "Índice de 
+Empoderamiento Político Femenino",
        caption = "Elaboración propia en base a V-Dem") +
   theme_minimal() 
 long_u
@@ -136,21 +138,44 @@ save_plot("output/fig/long_u.jpg", fig = long_u)
 
 long_b <- data %>% 
   filter(year >= 1990 & 
-           !is.na(women_empower_vdem_vdem) & 
-           !is.na(`hourearn_fem_isco08_total_ilo-stat`)) %>% 
+           !is.na(women_empower_vdem) & 
+           !is.na(hourearn_fem_isco08_total_ilo_stat)) %>% 
   group_by(year) %>% 
-  summarise(cor = cor(women_empower_vdem_vdem, 
-                      `hourearn_fem_isco08_total_ilo-stat`,
+  summarise(cor = cor(women_empower_vdem, 
+                      hourearn_fem_isco08_total_ilo_stat,
                       use = "pairwise.complete.obs",
                       method = "pearson")) %>% 
   ggplot(aes(x = year, y = cor)) + 
   geom_line(color = "purple") +
-  labs(title="Evolution of the relationship
-between Women Political Empowerment Index and
-Female hourly salary (1990-2020)",
-       x ="Year", y = "",
+  labs(title="Transformaciones en la relación entre el
+Índice de Empoderamiento Político Femenino y 
+el salario femenino medio por hora (1990-2020)",
+       x ="Año", y = "",
        caption = "Elaboración propia en base a V-Dem e ILO-Stat") +
   theme_minimal() 
 long_b
 save_plot("output/fig/long_b.jpg", fig = long_b)
+
+
+## Incorporar países -------------------------------------------------------
+
+ud_pais <- data %>% 
+  filter(year >= 2000 & 
+           iso3c %in% c("CHL", "ARG", "USA", "DEU") &
+           !is.na(ud_ilo_stat)) %>% 
+  mutate(iso3c = car::recode(.$iso3c,
+                             c("'CHL' = 'Chile';
+                               'ARG' = 'Argentina';
+                               'USA' = 'Estados Unidos';
+                               'DEU' = 'Alemania'"))) %>% 
+  group_by(iso3c, year) %>% 
+  ggplot(aes(x = year, y = ud_ilo_stat, color = iso3c)) + 
+  geom_line() +
+  labs(title="Transformaciones en la densidad sindical (2000-2020)",
+       x ="Año", y = "Densidad sindical (%)",
+       color = "Países",
+       caption = "Elaboración propia en base a V-Dem e ILO-Stat") +
+  theme_minimal() 
+ud_pais
+save_plot("output/fig/ud_pais.jpg", fig = ud_pais)
 
