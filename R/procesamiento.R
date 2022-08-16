@@ -12,16 +12,6 @@ pacman::p_load(tidyverse,
 # Cargar datos ------------------------------------------------------------
 fdl <- readRDS(url("https://github.com/fabrica-datos-laborales/fdl-data/raw/main/output/data/fdl.rds"))
 
-# Explorar ----------------------------------------------------------------
-
-dim(fdl)
-find_var(fdl, "db_wdi") #Ease of doing business score (0 = lowest performance to 100 = best performance)
-find_var(fdl, "ud_ilo_stat") #Trade union density rate (%)
-find_var(fdl, "mrw_oecd") #Minimum relative to median wages of full-time workers
-find_var(fdl, "Govint_ictwss") #Government intervention in wage bargaining 
-find_var(fdl, "hourearn_fem_isco08_total_ilo_stat") #Mean nominal hourly earning of women employees (ISCO08 classification)
-find_var(fdl, "women_empower_vdem") #Women political empowerment index
-
 # Seleccionar variables ---------------------------------------------------
 proc <- fdl %>% 
   select(iso3c,
