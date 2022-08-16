@@ -6,4 +6,4 @@ Este repositorio incorpora el material asociado a los talleres Introducción a R
 
 - *input*: incorpora los datos originales con los cuales se trabajará. 
 - *output*: incluye las figuras generadas en el taller de visualización. 
-- *R*: contiene los códigos asociados a cada uno de los talleres (**__exploracion.R__** y **visualizacion.R**), junto con un código de preparación de datos (**procesamiento.R__**). 
+- *R*: contiene los códigos asociados a cada uno de los talleres (**exploracion.R** y **visualizacion.R**), junto con un código de preparación de datos (**procesamiento.R**). 
