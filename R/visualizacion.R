@@ -163,11 +163,6 @@ ud_pais <- data %>%
   filter(year >= 2000 & 
            iso3c %in% c("CHL", "ARG", "USA", "DEU") &
            !is.na(ud_ilo_stat)) %>% 
-  mutate(iso3c = car::recode(.$iso3c,
-                             c("'CHL' = 'Chile';
-                               'ARG' = 'Argentina';
-                               'USA' = 'Estados Unidos';
-                               'DEU' = 'Alemania'"))) %>% 
   group_by(iso3c, year) %>% 
   ggplot(aes(x = year, y = ud_ilo_stat, color = iso3c)) + 
   geom_line() +
@@ -175,6 +170,8 @@ ud_pais <- data %>%
        x ="Año", y = "Densidad sindical (%)",
        color = "Países",
        caption = "Elaboración propia en base a V-Dem e ILO-Stat") +
+  scale_color_discrete(labels=c('Argentina', 'Chile',
+                               'Alemania', 'Estados Unidos')) +
   theme_minimal() 
 ud_pais
 save_plot("output/fig/ud_pais.jpg", fig = ud_pais)
