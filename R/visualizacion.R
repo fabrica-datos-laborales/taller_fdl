@@ -6,8 +6,7 @@ rm(list = ls())
 #install.packages("pacman")
 pacman::p_load(tidyverse,
                sjPlot,
-               stringr,
-               car)
+               stringr)
 
 # Cargar datos ------------------------------------------------------------
 data <- readRDS("output/proc.rds")
