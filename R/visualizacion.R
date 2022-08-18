@@ -39,17 +39,17 @@ barra
 
 ### Títulos
 barra <- barra + 
-  labs(title="Intervención gubernamental en negociaciones 
-salariales",
+  labs(title="Intervención gubernamental en 
+negociaciones  salariales",
      x ="", y = "Total",
      caption = "Elaboración propia en base a ICTWSS")
 barra
 
 ### Tema 
-barra + theme_minimal()
+barra <- barra + theme_minimal()
 barra
 
-save_plot("output/fig/barras.jpg", fig = barra)
+save_plot("output/fig/barras.jpg", fig = barra, width = 17, height = 10)
 #save_plot("output/fig/imagen.jpg", fig = last_plot())
 
 ## Histograma --------------------------------------------------------------
@@ -57,7 +57,7 @@ histo <- data %>%
   group_by(iso3c, year) %>% 
   filter(!is.na(db_wdi)) %>% 
   ggplot(aes(x = db_wdi)) + 
-  geom_histogram(color = "black", fill = "red") + 
+  geom_histogram(fill = "red") + 
   labs(title="Ease of Doing Business Index",
        x ="", y = "Total",
        caption = "Elaboración propia en base a WDI") +
@@ -89,10 +89,10 @@ salariales") +
   theme(axis.text.x = element_blank(),
         panel.background = element_rect("white"),
         panel.grid = element_line("grey80"),
-        plot.caption = element_text(hjust = -2)) 
+        plot.caption = element_text(hjust = 2)) 
 bi_puntos
 
-save_plot("output/fig/bi_puntos.jpg", fig = bi_puntos)
+save_plot("output/fig/bi_puntos.jpg", fig = bi_puntos, width = 20, height = 12)
 
 ## Dispersión --------------------------------------------------------------
 scatter <- data %>% 
@@ -110,7 +110,7 @@ para trabajadores a tiempo completo",
   theme_minimal() 
 scatter
 
-save_plot("output/fig/scatter.jpg", fig = scatter)
+save_plot("output/fig/scatter.jpg", fig = scatter, width = 17, height = 12)
 
 # Longitudinal ------------------------------------------------------------
 
@@ -130,7 +130,7 @@ Empoderamiento Político Femenino",
        caption = "Elaboración propia en base a V-Dem") +
   theme_minimal() 
 long_u
-save_plot("output/fig/long_u.jpg", fig = long_u)
+save_plot("output/fig/long_u.jpg", fig = long_u, width = 16, height = 13)
 
 
 ## Bivariado ---------------------------------------------------------------
@@ -153,7 +153,7 @@ el salario femenino medio por hora (1990-2020)",
        caption = "Elaboración propia en base a V-Dem e ILO-Stat") +
   theme_minimal() 
 long_b
-save_plot("output/fig/long_b.jpg", fig = long_b)
+save_plot("output/fig/long_b.jpg", fig = long_b, width = 16, height = 12)
 
 
 ## Incorporar países -------------------------------------------------------
@@ -173,5 +173,5 @@ ud_pais <- data %>%
                                'Alemania', 'Estados Unidos')) +
   theme_minimal() 
 ud_pais
-save_plot("output/fig/ud_pais.jpg", fig = ud_pais)
+save_plot("output/fig/ud_pais.jpg", fig = ud_pais, width = 19, height = 14)
 
